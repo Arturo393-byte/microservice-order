@@ -1,0 +1,22 @@
+package com.unir.orders.data;
+
+import org.springframework.stereotype.Repository;
+
+
+import lombok.RequiredArgsConstructor;
+
+import com.unir.orders.data.model.Product;
+
+import lombok.RequiredArgsConstructor;
+
+@Repository
+@RequiredArgsConstructor
+public class ProductRepository {
+
+    private final ProductJpaRepository repository;
+	   public Product getById(Long id) {
+	        return repository.findById(id).orElse(null);
+	    }
+
+	
+}

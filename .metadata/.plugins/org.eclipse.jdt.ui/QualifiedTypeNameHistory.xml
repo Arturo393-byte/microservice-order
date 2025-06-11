@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="com.unir.orders.service.ClienteService"/>
+    <fullyQualifiedTypeName name="com.unir.orders.data.model.Product"/>
+    <fullyQualifiedTypeName name="com.unir.orders.data.ProductRepository"/>
+    <fullyQualifiedTypeName name="com.unir.orders.data.model.order_details"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.OneToMany"/>
+    <fullyQualifiedTypeName name="com.unir.orders.data.model.Orderdetails"/>
+    <fullyQualifiedTypeName name="com.unir.orders.controller.model.CreateOrderRequest.Orderdetails"/>
+</qualifiedTypeNameHistroy>

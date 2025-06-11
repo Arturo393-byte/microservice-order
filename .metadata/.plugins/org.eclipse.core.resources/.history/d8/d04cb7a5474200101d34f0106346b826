@@ -1,0 +1,42 @@
+package com.unir.orders.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import com.unir.orders.controller.model.*;
+import reactor.core.publisher.Mono;
+
+
+@Service
+public class ClienteService {
+
+	@Autowired
+	private WebClient webClient;
+
+    public OrderDto obtenerClientePorId(Long id) {
+    	
+    	return webClient.get()
+        .uri(uriBuilder -> uriBuilder
+                .path("/api/v1/ruc/{id}")
+                .queryParam("token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImdlcmVuY2lhQHBlcnVpbmZvcm1hdGljLmNvbSJ9.yVB25x4bp01g8Jq9f2JOlbUODgOoshCaDw2sN0DZyVA")
+                .build(id)) // ← este es el path variable
+        .retrieve()
+        .bodyToMono(OrderDto.class)
+        .block(); // ← solo si estás en un entorno no reactivo
+    	
+    	
+    	
+    	
+      /*  Mono<OrderDto> clienteMono = webClient.get()
+                .uri("/cliente/{id}", id)
+                .retrieve()
+                .bodyToMono(OrderDto.class);
+
+        return clienteMono.block(); // ← Si estás en un entorno no reactivo, puedes usar block()*/
+        
+        
+        
+        
+    }
+	
+}

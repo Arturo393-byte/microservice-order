@@ -1,0 +1,26 @@
+package com.unir.orders.controller.model;
+
+import java.util.Date;
+
+import com.unir.orders.data.utils.Consts;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+public class OrderdetailsDTO {
+
+	  private Long id;
+	  private String idorderdetails;
+	  private String  idorder;
+	  private String  numberitems;
+	  private int  cant;
+	  private String  currentbook_price;
+	  private String  idbook;
+	  private String   status;
+	  private Date  updateddate;
+	
+	
+	
+}

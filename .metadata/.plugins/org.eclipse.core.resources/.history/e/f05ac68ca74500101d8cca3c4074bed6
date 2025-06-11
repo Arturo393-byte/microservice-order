@@ -1,0 +1,15 @@
+package com.unir.orders.data;
+
+import com.unir.orders.data.model.Order;
+
+public class OrderDetailRepository {
+
+	
+	
+    private final OrderDetailJpaRepository repository;
+    
+	 public Order save(order_details order_deta) {
+	        return repository.save(order);
+	    }
+	
+}

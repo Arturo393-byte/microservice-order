@@ -1,0 +1,6 @@
+package com.unir.orders.data.model;
+
+public class Rating {
+	private double rate;
+	private double count;
+}

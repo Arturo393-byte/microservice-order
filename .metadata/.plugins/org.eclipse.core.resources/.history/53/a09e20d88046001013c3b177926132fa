@@ -1,0 +1,28 @@
+package com.unir.orders.service;
+
+import org.springframework.http.ResponseEntity;
+
+import com.unir.orders.controller.model.CreateOrderRequest;
+import com.unir.orders.data.OrderRepository;
+import com.unir.orders.data.model.Order;
+
+public class OrderServiceSave {
+
+	  private final OrderRepository orderRepository;
+
+	    public OrderServiceSave(OrderRepository orderRepository) {
+	        this.orderRepository = orderRepository;
+	    }
+
+	    public ResponseEntity<Order> addProduct(CreateOrderRequest request, double price, String category) {
+	        Order order = new Order();
+	       /* order.setProductId(request.getProductId());
+	        order.setCustomer(request.getCustomer());
+	        order.setPrice(price);
+	        order.setCategory(category);*/
+	        return ResponseEntity.ok(orderRepository.save(order));
+	    }
+	
+	
+	
+}

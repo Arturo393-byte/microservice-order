@@ -1,0 +1,40 @@
+package com.unir.orders.service;
+
+
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+
+import com.unir.orders.controller.model.ProductDto;
+import com.unir.orders.data.OrderRepository;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import com.unir.orders.data.model.Product;
+import com.unir.orders.controller.model.CreateOrderRequest;
+import com.unir.orders.data.ProductRepository;
+
+@Service
+@Slf4j
+public class ProductsServiceImpl implements ProductsService {
+
+	@Autowired
+	private ProductRepository repository;
+	
+	
+	
+	public Product getProduct(long Id) {
+		
+		return repository.getById(Id);
+	}
+
+	
+}

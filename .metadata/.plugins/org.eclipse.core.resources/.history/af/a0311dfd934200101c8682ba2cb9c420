@@ -1,0 +1,5 @@
+package com.unir.orders.controller.model;
+
+public class ProductDto {
+
+}

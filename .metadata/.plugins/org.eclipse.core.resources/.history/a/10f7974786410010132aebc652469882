@@ -1,0 +1,26 @@
+package com.unir.orders.data;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import com.unir.orders.data.model.Order;
+
+interface OrderJpaRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
+
+	List<Order> findByName(String id_order);
+
+	List<Order> findBycreate_date(Date created_date);
+
+	/*List<Order> findByVisible(Boolean visible);
+
+	List<Order> findByNameAndCountry(String name, String country);*/
+
+	
+		
+	
+	
+	
+}

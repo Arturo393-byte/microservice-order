@@ -1,0 +1,5 @@
+package com.unir.orders.data;
+
+public class ProductRepository {
+
+}

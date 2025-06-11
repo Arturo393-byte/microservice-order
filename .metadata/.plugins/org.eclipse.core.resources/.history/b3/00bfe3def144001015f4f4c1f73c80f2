@@ -1,0 +1,102 @@
+package com.unir.orders.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import com.unir.orders.data.OrderRepository;
+import com.unir.orders.data.model.Order;
+import com.unir.orders.data.model.Product;
+
+@Service
+public class ApiService {
+	
+	/*  @Autowired
+	
+	   private WebClient webClient;
+	  
+	    
+	    public Mono<String> getPostById(String id) {
+	        return webClient.get()
+	                .uri(uriBuilder -> uriBuilder
+	                        .scheme("https")
+	                        .host("fakestoreapi.com")
+	                        .path("/products/{id}")
+	                        .build(id))
+	                .retrieve()
+	                .bodyToMono(String.class);
+	    }*/
+	
+	private final OrderRepository repository;
+	private final WebClient webClient;
+	// private final OrdersService orderService;
+	  
+	 public ApiService(OrderRepository repository,WebClient.Builder builder) {
+		   this.repository=repository;
+	       this.webClient = builder.baseUrl("https://fakestoreapi.com").build();
+	        //this.orderService = orderService;
+	    }
+	 public Mono<String> createOrder(Order order) {
+	        return webClient.get()
+	            .uri("/products/" + order.getIdorder())
+	            .retrieve()
+	            .bodyToMono(Product.class)
+	            .flatMap(response -> {
+	                if (response.getRating().getCount() >= order.getTotal_item()) {
+	                		               	                
+	                    repository.save(order);
+	                	
+	                	                	
+	                    return Mono.just("Orden guardada");
+	                } else {
+	                    return Mono.just("Producto sin stock suficiente");
+	                }
+	            })
+	            .onErrorResume(ex -> Mono.just("Error al consultar el producto: " + ex.getMessage()));
+	    }
+	 
+ 
+	 /*    public ResponseEntity<Order> addProduct(@RequestBody CreateOrderRequest request) {           
+     Order createdProduct = service.createOrder(request);
+
+     if (createdProduct != null) {
+         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+     } else {
+         return ResponseEntity.badRequest().build();
+     }
+ }
+*/
+	 
+	 
+	 
+	 
+	 
+	 
+/*	public Mono<ResponseEntity<Order>> evaluateAndCreateOrder(CreateOrderRequest request) {
+	        return webClient.get()
+	                .uri("/products/{id}", request.getId_order())
+	                .retrieve()
+	                .bodyToMono(Product.class)
+	                .flatMap(product -> {
+	                    if (product.getPrice() > 50 && "electronics".equalsIgnoreCase(product.getCategory())) {
+	                        return Mono.fromCallable(() -> orderService.addProduct(request, product.getPrice(), product.getCategory()));
+	                    } else {
+	                        return Mono.error(new RuntimeException("Producto no cumple condiciones"));
+	                    }
+	                });
+	    }*/
+	
+	
+	
+	
+	    
+	    
+	    
+	    
+	    
+	    
+
+}

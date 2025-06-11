@@ -1,0 +1,135 @@
+package com.unir.orders.controller;
+
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.unir.orders.controller.model.CreateOrderRequest;
+import com.unir.orders.controller.model.OrderDto;
+import com.unir.orders.data.model.Order;
+import com.unir.orders.service.ApiService;
+import com.unir.orders.service.OrdersService;
+import reactor.core.publisher.Mono;
+
+
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+
+@RequestMapping
+@RestController
+//@RequestMapping
+@RequiredArgsConstructor
+@Slf4j
+@Tag(name = "Orders Controller", description = "Microservicio encargado de exponer operaciones CRUD sobre Orders alojados en una base de datos en memoria.")
+
+public class OrdersController {
+  
+	@Autowired
+    private ApiService apiService;
+
+    @GetMapping("products/{idx}")
+    public Mono<String> getPost(@PathVariable String idx) {    	
+        return apiService.getPostById(idx);
+    }	
+	  // @Autowired
+	 private final OrdersService service;	  
+	 private  WebClient webClient = WebClient.create("https://fakestoreapi.com");
+	   	  
+	 
+    @PostMapping("/orders")
+    @Operation(
+            operationId = "Insertar un Order",
+            description = "Operacion de escritura",
+            summary = "Se crea un producto a partir de sus datos orders.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Datos del producto a crear.",
+                    required = true,
+    content = @Content(mediaType = "application/json", schema = @Schema(implementation = CreateOrderRequest.class))))
+   
+    @Parameter(name = "idorder", description = "id order ", example = "6", required = false) 
+    @Parameter(name = "createddate", description = "Fecha de Creacion.  Debe ser Fecha", example = "2025-06-07", required = false)
+    @Parameter(name = "updateddate", description = "Fecha de  Actualizacion. Debe ser Fecha", example = "2025-06-07", required = false)
+    @Parameter(name = "total_items", description = "Total Items. Cantidad de Registro", example = "2", required = false)
+    @Parameter(name = "total_taxes", description = "Total taxes. Monto", example = "20", required = false)
+    @Parameter(name = "total", description = "Total. Monto", example = "20", required = false)
+    @Parameter(name = "payment_transaction_id", description = "Id transacccion", example = "id", required = false)
+    @Parameter(name = "payment_transaction_response", description = "Response de Transaccion", example = "Response", required = false)
+    @Parameter(name = "status", description = "Estado", example = "Estado", required = false)
+    @ApiResponse(
+            responseCode = "201",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class)))
+    @ApiResponse(
+            responseCode = "400",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            description = "Datos incorrectos introducidos.")
+    @ApiResponse(
+            responseCode = "404",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
+            description = "No se ha encontrado el producto con el identificador indicado.")
+  
+    
+    
+    
+    
+  /*orignal
+ /*   public Mono<ResponseEntity<Order>> addProduct(@RequestBody CreateOrderRequest request) {
+  //  public ResponseEntity<Order> addProduct(@RequestBody CreateOrderRequest request,Order order) {           
+       
+       final Logger logger = LoggerFactory.getLogger(OrdersController.class);       
+        String id = request.getIdorder();          
+        return webClient.get()
+                .uri("/products/"+id)
+                .retrieve()        		
+                .bodyToMono(JsonNode.class)                
+		        .flatMap(jsonNode -> {
+		            String count = jsonNode.get("rating").get("count").asText();	
+		            int countRequest = request.getCount();
+		            if (Double.parseDouble(count) >= countRequest) {//order.getTotal_item()
+		            	//logger.info(Integer.toString(countRequest));
+		            	Order createdProduct = service.createOrder(request);
+		            	if (createdProduct != null) {		            	
+                        return Mono.just(ResponseEntity.status(HttpStatus.CREATED).body(createdProduct));
+                        
+		            	}else {
+		            		return Mono.just(ResponseEntity.badRequest().build());
+		            	}
+		            } else {		
+		            	//logger.info("no hay stock");
+		             return Mono.just(ResponseEntity.badRequest().body(null));
+		            }
+		        });    
+                
+   
+        
+      /*  if (createdProduct != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }*/
+        
+             
+    }/*
+
+}

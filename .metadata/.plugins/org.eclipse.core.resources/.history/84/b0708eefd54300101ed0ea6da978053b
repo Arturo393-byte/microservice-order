@@ -1,0 +1,64 @@
+package com.unir.orders.service;
+
+
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+
+import com.unir.orders.controller.model.ProductDto;
+import com.unir.orders.data.OrderRepository;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import com.unir.orders.data.model.Product;
+import com.unir.orders.controller.model.CreateOrderRequest;
+import com.unir.orders.data.ProductRepository;
+
+
+
+import org.springframework.web.reactive.function.client.WebClient;
+
+import reactor.core.publisher.Mono;
+
+
+
+@Service
+@Slf4j
+public class ProductsServiceImpl implements ProductsService {
+
+	@Autowired
+	private ProductRepository repository;
+		
+	public Product getProduct(long Id) {
+		
+		return repository.getById(Id);
+	}
+
+	
+	
+	@Autowired
+	private WebClient webClient;
+
+    public Mono<Product> obtenerProductPorId(Long id) {
+    	
+    	return webClient.get()
+        .uri(uriBuilder -> uriBuilder
+                .path("/products/")
+                .build(id)) // ← este es el path variable
+        .retrieve()
+        .bodyToMono(Product.class);
+        
+        //.block(); // ← solo si estás en un entorno no reactivo
+    	
+           
+    }
+		
+}

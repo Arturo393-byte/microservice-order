@@ -1,0 +1,67 @@
+package com.unir.orders.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import com.unir.orders.controller.model.CreateOrderRequest;
+import com.unir.orders.data.model.Order;
+import com.unir.orders.service.OrdersService;
+
+
+
+@Service
+public class ApiService {
+	
+	/*  @Autowired
+	
+	   private WebClient webClient;
+	  
+	    
+	    public Mono<String> getPostById(String id) {
+	        return webClient.get()
+	                .uri(uriBuilder -> uriBuilder
+	                        .scheme("https")
+	                        .host("fakestoreapi.com")
+	                        .path("/products/{id}")
+	                        .build(id))
+	                .retrieve()
+	                .bodyToMono(String.class);
+	    }*/
+	
+	 private final WebClient webClient;
+	 private final OrdersService orderService;
+	  
+	 public ApiService(WebClient.Builder webClientBuilder, OrdersService orderService) {
+	        this.webClient = webClientBuilder.baseUrl("https://fakestoreapi.com").build();
+	        this.orderService = orderService;
+	    }
+
+	    public Mono<ResponseEntity<Order>> evaluateAndCreateOrder(CreateOrderRequest request) {
+	        return webClient.get()
+	                .uri("/products/{id}", request.getId_order())
+	                .retrieve()
+	                .bodyToMono(Product.class)
+	                .flatMap(product -> {
+	                    if (product.getPrice() > 50 && "electronics".equalsIgnoreCase(product.getCategory())) {
+	                        return Mono.fromCallable(() -> orderService.addProduct(request, product.getPrice(), product.getCategory()));
+	                    } else {
+	                        return Mono.error(new RuntimeException("Producto no cumple condiciones"));
+	                    }
+	                });
+	    }
+	
+	
+	
+	
+	    
+	    
+	    
+	    
+	    
+	    
+
+}

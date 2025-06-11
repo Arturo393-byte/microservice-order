@@ -1,0 +1,220 @@
+package com.unir.orders.service;
+
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+
+import com.unir.orders.controller.model.OrderDto;
+import com.unir.orders.data.OrderDetailRepository;
+import com.unir.orders.data.OrderRepository;
+
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import com.unir.orders.data.model.Order;
+import com.unir.orders.data.model.Orderdetails;
+//import com.unir.orders.data.model.Orderdetails.order_detailsBuilder;
+import com.unir.orders.data.utils.Consts;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.transaction.Transactional;
+
+import com.unir.orders.controller.model.CreateOrderRequest;
+
+
+@Service
+@Slf4j
+public class OrdersServiceImpl implements OrdersService {
+
+	@Autowired
+	private OrderRepository repository;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+
+	
+	@Override
+	public List<Order> getOrders(Date created_date, Date updated_date, Double total_items,Double total_taxes ,Double total) {
+
+	/*	if (StringUtils.hasLength(name) || StringUtils.hasLength(country) || StringUtils.hasLength(description)
+				|| visible != null) {
+			
+			return repository.search(name, country, description, visible);
+		}*/
+					
+			if (created_date instanceof Date || updated_date instanceof Date || total_items instanceof Double
+						||  total_taxes instanceof Double) {	
+						return repository.search(created_date); /*, updated_date, total_items, total_taxes,total);*/
+			}
+
+		List<Order> orders = repository.getOrders();
+		return orders.isEmpty() ? null : orders;
+	}
+
+	@Override
+	public Order getOrder(String productId) {
+		return repository.getById(Long.valueOf(productId));
+	}
+
+	@Override
+	public Boolean removeOrder(String id_order) {
+
+		Order order = repository.getById(Long.valueOf(id_order));
+
+		if (order != null) {
+			repository.delete(order);
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
+	}
+
+	
+	
+
+   /* public Mono<Boolean> validarStockSuficiente(List<Order_Details> detalles) {
+        return Flux.fromIterable(detalles)
+            .flatMap(detalle -> webClient.get()
+                .uri("/products/" + detalle.getProductId())
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .map(json -> {
+                    int stockDisponible = json.get("stock").asInt();
+                    return stockDisponible >= detalle.getQuantity();
+                }))
+            .all(Boolean::booleanValue); // true si todos son true
+    }*/
+	
+		
+   
+	@Override
+	@Transactional
+	public Order createOrder(CreateOrderRequest request) {
+
+		//Otra opcion: Jakarta Validation: https://www.baeldung.com/java-validation
+		if (request != null && StringUtils.hasLength(request.getIdorder().trim()))				
+				 {
+			Order order = Order.builder()
+					.idorder(request.getIdorder())
+					.createdate(request.getCreateddate())
+					.updated(request.getUpdateddate())
+					.total_item(request.getTotal_items())
+					.total_taxes(request.getTotal_taxes())
+					.total(request.getTotal())
+					.count(request.getCount())
+					.PAYMENTTRANSACTIONID(request.getPayment_transaction_id())
+					.PAYMENT_TRANSACTION_RESPONSE(request.getPayment_transaction_response())
+					.STATUS(request.getStatus()).build();
+			//return repository.save(order);
+			
+			request.getDetalles().forEach(dr->{
+				Orderdetails d = new Orderdetails();
+				d.setIdbook(dr.getIdbook());
+				d.setIdorder(dr.getIdorder());
+				d.setStatus(dr.getStatus());
+				order.addDetail(d);
+			});
+			
+			return repository.save(order);
+			
+		} else
+		
+		{
+			return null;
+		}
+	}
+	
+	
+	
+    
+    
+    
+    
+    
+	
+	
+    /*funcioon ok 
+	@Override
+	public Order createOrder(CreateOrderRequest request) {
+
+		//Otra opcion: Jakarta Validation: https://www.baeldung.com/java-validation
+		if (request != null && StringUtils.hasLength(request.getIdorder().trim()))				
+				 {
+			Order order = Order.builder()
+					.idorder(request.getIdorder())
+					.createdate(request.getCreateddate())
+					.updated(request.getUpdateddate())
+					.total_item(request.getTotal_items())
+					.total_taxes(request.getTotal_taxes())
+					.total(request.getTotal())
+					.count(request.getCount())
+					.PAYMENTTRANSACTIONID(request.getPayment_transaction_id())
+					.PAYMENT_TRANSACTION_RESPONSE(request.getPayment_transaction_response())
+					.STATUS(request.getStatus()).build();
+			return repository.save(order);
+		} else
+		
+		{
+			return null;
+		}
+	}
+*/
+	
+	
+	
+	@Override
+	public Order updateOrder(String id_order, String request) {
+
+		//PATCH se implementa en este caso mediante Merge Patch: https://datatracker.ietf.org/doc/html/rfc7386
+		Order order = repository.getById(Long.valueOf(id_order));
+		if (order != null) {
+			try {
+				JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(request));
+				JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(order)));
+				Order patched = objectMapper.treeToValue(target, Order.class);
+				repository.save(patched);
+				return patched;
+			} catch (JsonProcessingException | JsonPatchException e) {
+				log.error("Error updating product {}", id_order, e);
+                return null;
+            }
+        } else {
+			return null;
+		}
+	}
+
+	@Override
+	public Order updateOrder(String id_order, OrderDto updateRequest) {
+		Order order = repository.getById(Long.valueOf(id_order));
+		if (order != null) {
+			order.update(updateRequest);
+			repository.save(order);
+			return order;
+		} else {
+			return null;
+		}
+	}
+
+
+
+	/*@Override
+	public Order updateOrder(String id_order, OrderDto updateRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}*/
+
+}

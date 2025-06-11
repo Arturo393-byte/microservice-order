@@ -1,0 +1,53 @@
+package com.unir.orders.data;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import com.unir.orders.data.model.Order;
+import com.unir.orders.data.utils.Consts;
+import com.unir.orders.data.utils.SearchCriteria;
+import com.unir.orders.data.utils.SearchOperation;
+import com.unir.orders.data.utils.SearchStatement;
+import java.util.Date;
+import java.util.List;
+
+@Repository
+@RequiredArgsConstructor
+public class OrderRepository {
+
+    private final OrderJpaRepository repository;
+
+    public List<Order> getOrders() {
+        return repository.findAll();
+    }
+
+    public Order getById(Long id_order) {
+        return repository.findById(id_order).orElse(null);
+    }
+
+    public Order save(Order order) {
+        return repository.save(order);
+    }
+
+    public void delete(Order order) {
+        repository.delete(order);
+    }
+
+    //public List<Order> search(String id_order, Date created_date) {
+    	public List<Order> search(Date createddate) {
+        SearchCriteria<Order> spec = new SearchCriteria<>();
+
+        //if (StringUtils.isNotBlank(id_order)) {
+        //    spec.add(new SearchStatement(Consts.ID_ORDER, id_order, SearchOperation.MATCH));
+       // }
+        
+        //if (StringUtils.isNotBlank(created_date)) {
+        if (createddate instanceof Date) {
+            spec.add(new SearchStatement(Consts.CREATEDDATE, createddate, SearchOperation.EQUAL));
+        }
+        return repository.findAll(spec);
+    }
+
+    
+
+}

@@ -1,0 +1,30 @@
+package com.unir.orders.data.utils;
+
+public class Consts {
+    //Constants for db entity fields
+    //public static final String NAME = "name";
+    //public static final String COUNTRY = "country";
+    //public static final String DESCRIPTION = "description";
+    //public static final String VISIBLE = "visible";
+	//order
+    public static final String	id_order = "id_order";
+    public static final String	created_date = "created_date";
+    public static final String	updated_date = "updated_date";
+    public static final String	total_items = "total_items";
+    public static final String	total_taxes	= "total_taxes";
+    public static final String	total =	"total";
+    public static final String	payment_transaction_id = "payment_transaction_id";
+    public static final String	payment_transaction_response = "payment_transaction_response";
+    public static final String	status = "status";
+       
+    //Detalle Orders
+    public static final String	ID_ORDER_DETAILS	=	"id_order_details"	;    
+    public static final String	NUMBER_ITEMS	=	"number_items"	;
+    public static final String	CURRENT_BOOK_PRICE	=	"current_book_price"	;
+    public static final String	ID_BOOK	=	"id_book"	;
+    
+    
+
+    
+      
+}

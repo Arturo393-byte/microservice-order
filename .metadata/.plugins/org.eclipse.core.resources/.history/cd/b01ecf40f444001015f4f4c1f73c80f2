@@ -1,0 +1,22 @@
+package com.unir.orders.data.utils;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.unir.orders.service.ApiService;
+
+import reactor.core.publisher.Mono;
+
+public class buscar {
+
+	
+	@Autowired
+    private ApiService apiService;
+
+    @GetMapping("products/{id}")
+    public Mono<String> getPost(@PathVariable String id) {
+    	
+        return apiService.getPostById(id);
+    }
+}

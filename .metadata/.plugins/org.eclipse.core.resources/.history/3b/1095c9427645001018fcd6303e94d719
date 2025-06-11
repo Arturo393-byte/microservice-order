@@ -1,0 +1,27 @@
+package com.unir.orders.controller.model;
+
+import java.util.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Builder;// se agrego
+@Getter
+@Setter
+@Builder// se agrego
+@AllArgsConstructor
+@NoArgsConstructor
+public class CreateOrderRequest {
+	private String  idorder;
+	private Date    createddate;
+	private Date    updateddate;
+	private Double  total_items;
+	private Double  total_taxes;
+	private Double  count;
+	private Double 	total;
+	private String  payment_transaction_id;
+	private String  payment_transaction_response;
+	private String  status;
+	    
+}

@@ -1,0 +1,19 @@
+package com.unir.orders.controller.model;
+
+import lombok.*;
+
+public class ProductDto {
+
+	private String id;
+	private String title;
+	private String price;
+	private String description;
+	private String category;
+	private String image;
+    /*"rating": {
+        "rate": 4.7,
+        "count": 500
+    }*/
+	
+	
+}

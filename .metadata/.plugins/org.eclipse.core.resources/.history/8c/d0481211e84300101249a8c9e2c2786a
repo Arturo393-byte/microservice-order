@@ -1,0 +1,17 @@
+package com.unir.orders.data.model;
+
+public class order_details {
+
+	
+	  id_order_details
+	  id_order
+	  number_items
+	  current_book_price
+	  id_book
+	  status
+	  updated_date
+	
+	
+	
+	
+}

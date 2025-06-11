@@ -1,0 +1,31 @@
+package com.unir.orders.data.model;
+
+
+import com.unir.orders.data.utils.Consts;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name = "Orders")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@ToString
+
+
+public class books {
+	
+	@Column(name = Consts.STATUS)
+    private String status;
+
+}

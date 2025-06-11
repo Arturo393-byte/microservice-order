@@ -1,0 +1,33 @@
+package com.unir.orders.controller.model;
+
+import lombok.*;
+import java.util.Date;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@ToString
+public class OrderDto {
+	
+	//private String name;
+	//private String country;
+	//private String description;
+    //private Boolean visible;
+	
+	private String  id_order;
+	private Date    created_date;
+	private Date    updated_date;
+	private Double  total_items;
+	private Double  total_taxes;
+	private Double 	total;
+	private String  payment_transaction_id;
+	private String  payment_transaction_response;
+	private String  status;
+	
+	
+	
+	
+	
+}
