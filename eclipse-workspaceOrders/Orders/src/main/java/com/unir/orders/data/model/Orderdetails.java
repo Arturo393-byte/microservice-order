@@ -1,0 +1,73 @@
+package com.unir.orders.data.model;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.unir.orders.data.utils.Consts;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+
+@Entity
+@Table(name = "Orders_details")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@ToString
+
+public class Orderdetails {
+	
+	  @Id
+	  @GeneratedValue(strategy = GenerationType.IDENTITY)
+	  private Long id;
+
+	  @Column(name = Consts.ID_ORDER_DETAILS)
+	  private String id_order_details;
+	  
+	 // @Column(name = Consts.IDORDER)
+	 // private String  idorder;
+	  	  
+	  @Column(name = Consts.NUMBER_ITEMS)
+	  private int  numberitems;
+	  
+	 // @Column(name = Consts.CANT)
+	 // private int  cant;
+	  
+	  @Column(name = Consts.CURRENT_BOOK_PRICE)	  
+	  private String  currentbook_price;
+	  
+	  @Column(name = Consts.ID_BOOK)	 
+	  private String  idbook;
+	  
+	  @Column(name = Consts.STATUS)	
+	  private String   status;
+	  
+	  @Column(name = Consts.UPDATED_DATE)
+	  private Date  updated_date;
+	
+	  @JsonBackReference
+	  @ManyToOne
+	  @JoinColumn(name = "id_order")
+	  private Order order;
+	  
+}

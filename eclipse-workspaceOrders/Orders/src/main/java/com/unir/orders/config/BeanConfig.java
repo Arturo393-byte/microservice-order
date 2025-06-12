@@ -1,0 +1,29 @@
+package com.unir.orders.config;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+//import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient;
+
+@Configuration
+public class BeanConfig {
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+    
+    @Bean
+	  public WebClient webClient() {
+	        return WebClient.builder()
+	        		//.baseUrl("https://reqres.in/api/users?page=2")
+	        		//https://fakestoreapi.com/products/{id}
+	        	//	.baseUrl("https://fakestoreapi.com")
+	        		.build();
+	  }
+    
+  
+    
+    
+}
