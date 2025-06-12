@@ -1,1 +1,0 @@
-INSERT INTO orders (idorder, createddate, updateddate, total_items, total_taxes,total,payment_transaction_id,payment_transaction_response,status) VALUES (1, '2025-06-03', '2025-06-04', 5, 50,60,null,null,null);
